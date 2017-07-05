@@ -36,9 +36,3 @@ class Book
         }
     }
 }
-
-$book = new Book("1984", "George Orwell", 9785267006323, 12);
-$book2 = new Book("1984", "George Orwell", 9785267006323);
-
-$string = (string) $book;
-echo $string;
