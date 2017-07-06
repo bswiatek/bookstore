@@ -2,17 +2,20 @@
 
 namespace Bookstore\Domain;
 
-class Customer
+abstract class Customer extends Person
 {
-    private $id;
-    private $firstName;
-    private $surname;
-    private $email;
     private static $lastId = 0;
+    private $id;
+    private $email;
 
-    public function __construct($id, string $firstName, string $surname, string $email)
+    abstract public function getMonthlyFee();
+    abstract public function getAmountToBorrow();
+    abstract public function getType();
+
+    public function __construct($id, string $name, string $surname, string $email)
     {
-        if ($id == null) {
+        parent::__construct($name, $surname);
+        if (empty($id)) {
             $this->id = ++self::$lastId;
         } else {
             $this->id = $id;
@@ -20,8 +23,6 @@ class Customer
                 self::$lastId = $id;
             }
         }
-        $this->firstName = $firstName;
-        $this->surname = $surname;
         $this->email = $email;
     }
 
@@ -30,28 +31,18 @@ class Customer
         return $this->id;
     }
 
-    public function getFirstName(): string
-    {
-        return $this->firstName;
-    }
-
-    public function getSurname(): string
-    {
-        return $this->surname;
-    }
-
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    public static function getLastId(): int
-    {
-        return self::$lastId;
-    }
-
     public function setEmail(string $email)
     {
         $this->email = $email;
+    }
+
+    public static function getLastId(): int
+    {
+        return self::$lastId;
     }
 }
