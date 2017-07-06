@@ -36,5 +36,5 @@ $customer1 = new Basic(3, 'John', 'Doe', 'johndoe@mail.com');
 $customer2 = new Premium( null, 'Mary', 'Poppins', 'mp@mail.com');
 $customer3 = new Premium(7, 'James', 'Bond', '007@mail.com');
 
-processPayment($customer1, 10);
-processPayment($customer3, 10);
+var_dump($customer1->getId());
+var_dump($customer2->getId());
