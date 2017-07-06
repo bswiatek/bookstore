@@ -1,5 +1,7 @@
 <?php
 
+namespace Bookstore\Domain;
+
 class Book
 {
     public $isbn;
@@ -19,6 +21,26 @@ class Book
         $this->available = $available;
     }
 
+    public function getIsbn(): int
+    {
+        return $this->isbn;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    public function isAvailable(): int
+    {
+        return $this->available;
+    }
+
     public function __toString() {
         $result = '<i>' . $this->title . '</i> - ' . $this->author;
         if (! $this->available) {
@@ -34,5 +56,9 @@ class Book
             $this->available--;
             return true;
         }
+    }
+
+    public function addCopy() {
+        $this->available++;
     }
 }
