@@ -5,6 +5,8 @@ use Bookstore\Domain\Customer;
 use Bookstore\Domain\Payer;
 use Bookstore\Domain\Customer\Basic;
 use Bookstore\Domain\Customer\Premium;
+use Bookstore\Exceptions\ExceededMaxAllowedException;
+use Bookstore\Exceptions\InvalidIdException;
 
 function autoloader($classname) {
     $lastSlash = strpos($classname, '\\') + 1;
@@ -29,6 +31,18 @@ function processPayment(Payer $payer, float $amount) {
     $payer->pay($amount);
 }
 
+function createBasicCustomer(int $id) {
+    try {
+        return new Basic($id, "name", "surname", "email");
+    } catch (InvalidIdException $e) {
+        echo "You cannot provide a negative id\n";
+    } catch (ExceededMaxAllowedException $e) {
+        echo "No more customers are allowed\n";
+    } catch (Exception $e) {
+        echo "Unknown Exception: " . $e->getMessage();
+    }
+}
+
 $book1 = new Book("1984", "George Orwell", 9785267006323, 12);
 $book2 = new Book("To Kill a Mockingbird", "Harper Lee", 9780061120084, 2);
 
@@ -36,5 +50,6 @@ $customer1 = new Basic(3, 'John', 'Doe', 'johndoe@mail.com');
 $customer2 = new Premium( null, 'Mary', 'Poppins', 'mp@mail.com');
 $customer3 = new Premium(7, 'James', 'Bond', '007@mail.com');
 
-var_dump($customer1->getId());
-var_dump($customer2->getId());
+createBasicCustomer(1);
+createBasicCustomer(-1);
+createBasicCustomer(55);
