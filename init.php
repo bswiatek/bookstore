@@ -12,37 +12,10 @@ function autoloader($classname) {
 }
 spl_autoload_register('autoloader');
 
-
-function addTaxes(array &$book, $index, $percentage) {
-    $book['price'] += round($percentage * $book['price'], 2);
-};
-
-class Taxes {
-    public static function add(array &$book, $index, $percentage)
-    {
-        if (isset($book['price'])) {
-            $book['price'] += round($percentage * $book['price'], 2);
-        }
-    }
-    public function addTaxes(array &$book, $index, $percentage)
-    {
-        if (isset($book['price'])) {
-            $book['price'] += round($percentage * $book['price'], 2);
-        }
-    }
-}
-
-$books = [
-    ['title' => '1984', 'price' => 8.15],
-    ['title' => 'Don Quijote', 'price' => 12.00],
-    ['title' => 'Odyssey', 'price' => 3.55]
-];
-
-array_walk($books, 'addTaxes', 0.16);
-var_dump($books);
-
-array_walk($books, ['Taxes', 'add'], 0.16);
-var_dump($books);
-
-array_walk($books, [new Taxes(), 'addTaxes'], 0.16);
-var_dump($books);
+$dbConfig = Config::getInstance()->get('db');
+$db = new PDO(
+    'mysql:host=sql.fcliver.nazwa.pl;dbname=fcliver_1',
+    $dbConfig['user'],
+    $dbConfig['password']
+);
+$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
