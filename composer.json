@@ -1,4 +1,15 @@
 {
+    "name": "swiatekbiz/bookstore",
+    "description": "Manages an online bookstore.",
+    "minimum-stability": "stable",
+    "license": "Apache-2.0",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Bartlomiej Swiatek",
+            "email": "emini1@swiatek.biz"
+        }
+    ],
     "require": {
         "monolog/monolog": "^1.23",
         "twig/twig": "^2.4"
