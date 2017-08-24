@@ -4,21 +4,15 @@ namespace Bookstore\Domain;
 
 class Book
 {
+    private $id;
     public $isbn;
     public $title;
     public $author;
-    public $available;
+    private $stock;
+    private $price;
 
-    public function __construct(
-        string $title,
-        string $author,
-        int $isbn,
-        int $available = 0
-    ) {
-        $this->isbn = $isbn;
-        $this->title = $title;
-        $this->author = $author;
-        $this->available = $available;
+    public function getId(): int {
+        return $this->id;
     }
 
     public function getIsbn(): int
@@ -36,29 +30,24 @@ class Book
         return $this->author;
     }
 
-    public function isAvailable(): int
-    {
-        return $this->available;
-    }
-
-    public function __toString() {
-        $result = '<i>' . $this->title . '</i> - ' . $this->author;
-        if (! $this->available) {
-            $result .= ' <b>Not available</b>';
-        }
-        return $result;
+    public function getStock(): int {
+        return $this->stock;
     }
 
     public function getCopy(): bool {
-        if ($this->available < 1) {
+        if ($this->stock < 1) {
             return false;
         } else {
-            $this->available--;
+            $this->stock--;
             return true;
         }
     }
 
     public function addCopy() {
-        $this->available++;
+        $this->stock++;
+    }
+
+    public function getPrice(): float {
+        return $this->price;
     }
 }
