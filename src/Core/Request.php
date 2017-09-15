@@ -45,4 +45,12 @@ class Request {
     public function isGet(): bool {
         return $this->method === self::GET;
     }
+
+    public function getParams(): FilteredMap {
+        return $this->params;
+    }
+
+    public function getCookies(): FilteredMap {
+        return $this->cookies;
+    }
 }
