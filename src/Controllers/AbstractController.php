@@ -14,6 +14,7 @@ abstract class AbstractController {
     protected $config;
     protected $view;
     protected $log;
+    protected $customerId;
 
     public function __construct(Request $request) {
         $this->request = $request;
