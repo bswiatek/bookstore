@@ -2,3 +2,4 @@ config/app.json
 vendor
 composer.lock
 log
+.idea
