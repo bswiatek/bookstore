@@ -8,6 +8,7 @@ use Bookstore\Core\Request;
 use Bookstore\Utils\DependencyInjector;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Bookstore\Models\BookModel;
 
 
 $config = new Config();
@@ -30,6 +31,7 @@ $di->set('PDO', $db);
 $di->set('Utils\Config', $config);
 $di->set('Twig_Environment', $view);
 $di->set('Logger', $log);
+$di->set('BookModel', new BookModel($di->get('PDO')));
 
 $router = new Router($di);
 $response = $router->route(new Request());

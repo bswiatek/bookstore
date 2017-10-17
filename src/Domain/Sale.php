@@ -20,7 +20,7 @@ class Sale {
         return $this->customer_id;
     }
 
-    public function getBooks(): array {
+    public function getBooks() {
         return $this->books;
     }
 
