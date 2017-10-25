@@ -2,12 +2,11 @@
 
 namespace Bookstore\Domain;
 
-class Book
-{
+class Book {
     private $id;
-    public $isbn;
-    public $title;
-    public $author;
+    private $isbn;
+    private $title;
+    private $author;
     private $stock;
     private $price;
 
@@ -15,18 +14,15 @@ class Book
         return $this->id;
     }
 
-    public function getIsbn(): int
-    {
+    public function getIsbn(): string {
         return $this->isbn;
     }
 
-    public function getTitle(): string
-    {
+    public function getTitle(): string {
         return $this->title;
     }
 
-    public function getAuthor(): string
-    {
+    public function getAuthor(): string {
         return $this->author;
     }
 

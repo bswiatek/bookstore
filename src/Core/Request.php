@@ -14,11 +14,9 @@ class Request {
 
     public function __construct() {
         $this->domain = $_SERVER['HTTP_HOST'];
-        $this->path = $_SERVER['REQUEST_URI'];
+        $this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->params = new FilteredMap(
-            array_merge($_POST, $_GET)
-        );
+        $this->params = new FilteredMap(array_merge($_POST, $_GET));
         $this->cookies = new FilteredMap($_COOKIE);
     }
 

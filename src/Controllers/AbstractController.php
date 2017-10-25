@@ -1,5 +1,7 @@
 <?php
+
 namespace Bookstore\Controllers;
+
 use Bookstore\Core\Request;
 use Bookstore\Utils\DependencyInjector;
 
@@ -31,6 +33,6 @@ abstract class AbstractController {
     }
 
     protected function render(string $template, array $params): string {
-        return $this->view->load($template)->render($params);
+        return $this->view->loadTemplate($template)->render($params);
     }
 }

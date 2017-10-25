@@ -95,39 +95,6 @@ class BookControllerTest extends ControllerTestCase {
         );
     }
 
-    public function testErrorSaving() {
-        $controller = $this->getController();
-        $controller->setCustomerId(9);
-        $book = new Book();
-        $book->addCopy();
-        $bookModel = $this->mock(BookModel::class);
-        $bookModel
-            ->expects($this->once())
-            ->method('get')
-            ->with(123)
-            ->will($this->returnValue($book));
-        $bookModel
-            ->expects($this->once())
-            ->method('borrow')
-            ->with(new Book(), 9)
-            ->will($this->throwException(new DbException()));
-        $this->di->set('BookModel', $bookModel);
-
-        $response = "Rendered template";
-        $this->mockTemplate(
-            'error.twig',
-            ['errorMessage' => 'Error borrowing book.'],
-            $response
-        );
-        $result = $controller->borrow(123);
-
-        $this->assertSame(
-            $result,
-            $response,
-            'Response object is not the expected one.'
-        );
-    }
-
     public function testBorrowingBook() {
         $controller = $this->getController();
         $controller->setCustomerId(9);

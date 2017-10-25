@@ -1,5 +1,8 @@
 <?php
 namespace Bookstore\Controllers;
+
+use Bookstore\Exceptions\DbException;
+use Bookstore\Exceptions\NotFoundException;
 use Bookstore\Models\BookModel;
 
 class BookController extends AbstractController {
@@ -8,6 +11,7 @@ class BookController extends AbstractController {
     public function getAllWithPage($page): string {
         $page = (int)$page;
         $bookModel = new BookModel($this->db);
+
         $books = $bookModel->getAll($page, self::PAGE_LENGTH);
 
         $properties = [
@@ -28,9 +32,7 @@ class BookController extends AbstractController {
         try {
             $book = $bookModel->get($bookId);
         } catch (\Exception $e) {
-            $this->log->error(
-                'Error getting book: ' . $e->getMessage()
-            );
+            $this->log->error('Error getting book: ' . $e->getMessage());
             $properties = ['errorMessage' => 'Book not found!'];
             return $this->render('error.twig', $properties);
         }
@@ -39,9 +41,12 @@ class BookController extends AbstractController {
         return $this->render('book.twig', $properties);
     }
 
-    public function getByUser(): string {
+    public function search(): string {
+        $title = $this->request->getParams()->getString('title');
+        $author = $this->request->getParams()->getString('author');
+
         $bookModel = new BookModel($this->db);
-        $books = $bookModel->getByUser($this->customerId);
+        $books = $bookModel->search($title, $author);
 
         $properties = [
             'books' => $books,
@@ -51,12 +56,10 @@ class BookController extends AbstractController {
         return $this->render('books.twig', $properties);
     }
 
-    public function search(): string {
-        $title = $this->request->getParams()->getString('title');
-        $author = $this->request->getParams()->getString('author');
+    public function getByUser(): string {
+        $bookModel = $this->di->get('BookModel');
 
-        $bookModel = new BookModel($this->db);
-        $books = $bookModel->search($title, $author);
+        $books = $bookModel->getByUser($this->customerId);
 
         $properties = [
             'books' => $books,
@@ -78,18 +81,14 @@ class BookController extends AbstractController {
         }
 
         if (!$book->getCopy()) {
-            $params = [
-                'errorMessage' => 'There are no copies left.'
-            ];
+            $params = ['errorMessage' => 'There are no copies left.'];
             return $this->render('error.twig', $params);
         }
 
         try {
             $bookModel->borrow($book, $this->customerId);
         } catch (DbException $e) {
-            $this->log->error(
-                'Error borrowing book: ' . $e->getMessage()
-            );
+            $this->log->warn('Error borrowing book: ' . $e->getMessage());
             $params = ['errorMessage' => 'Error borrowing book.'];
             return $this->render('error.twig', $params);
         }
@@ -113,10 +112,8 @@ class BookController extends AbstractController {
         try {
             $bookModel->returnBook($book, $this->customerId);
         } catch (DbException $e) {
-            $this->log->error(
-                'Error returning book: ' . $e->getMessage()
-            );
-            $params = ['errorMessage' => 'Error returning book.'];
+            $this->log->warn('Error borrowing book: ' . $e->getMessage());
+            $params = ['errorMessage' => 'Error borrowing book.'];
             return $this->render('error.twig', $params);
         }
 
