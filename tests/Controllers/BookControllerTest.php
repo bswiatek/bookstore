@@ -3,6 +3,7 @@ namespace Bookstore\Tests\Controllers;
 use Bookstore\Controllers\BookController;
 use Bookstore\Core\Request;
 use Bookstore\Exceptions\NotFoundException;
+use Bookstore\Exceptions\DbException;
 use Bookstore\Models\BookModel;
 use Bookstore\Tests\ControllerTestCase;
 use Twig_Template;
@@ -87,6 +88,39 @@ class BookControllerTest extends ControllerTestCase {
             $response
         );
         $result = $this->getController()->borrow(123);
+
+        $this->assertSame(
+            $result,
+            $response,
+            'Response object is not the expected one.'
+        );
+    }
+
+    public function testErrorSaving() {
+        $controller = $this->getController();
+        $controller->setCustomerId(9);
+        $book = new Book();
+        $book->addCopy();
+        $bookModel = $this->mock(BookModel::class);
+        $bookModel
+            ->expects($this->once())
+            ->method('get')
+            ->with(123)
+            ->will($this->returnValue($book));
+        $bookModel
+            ->expects($this->once())
+            ->method('borrow')
+            ->with(new Book(), 9)
+            ->will($this->throwException(new DbException()));
+        $this->di->set('BookModel', $bookModel);
+
+        $response = "Rendered template";
+        $this->mockTemplate(
+            'error.twig',
+            ['errorMessage' => 'Error borrowing book.'],
+            $response
+        );
+        $result = $controller->borrow(123);
 
         $this->assertSame(
             $result,
