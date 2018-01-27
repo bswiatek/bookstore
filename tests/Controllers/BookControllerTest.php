@@ -11,9 +11,7 @@ use Bookstore\Domain\Book;
 
 
 class BookControllerTest extends ControllerTestCase {
-    private function getController(
-        Request $request = null
-    ): BookController {
+    private function getController(Request $request = null): BookController {
         if ($request === null) {
             $request = $this->mock('Core\Request');
         }
