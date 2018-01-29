@@ -1,42 +1,47 @@
 <?php
 
-namespace Bookstore\Tests\Domain\Customer;
+namespace Bookstore\Tests\Domain;
 
 use Bookstore\Domain\Sale;
 use PHPUnit_Framework_TestCase;
 
 class SaleTest extends PHPUnit_Framework_TestCase {
 
-    public function testNewSaleHasNoBooks() {
+    public function testWhenCreatedBookListIsEmpty() {
         $sale = new Sale();
 
-        $this->assertEmpty(
-            $sale->getBooks(),
-            'When new, sale should have no books.'
-        );
+        $this->assertEmpty($sale->getBooks());
     }
 
-    public function testAddNewBook() {
+    public function testWhenAddingABookIGetOneBook() {
         $sale = new Sale();
         $sale->addBook(123);
 
-        $this->assertSame(
-            [123 => 1],
-            $sale->getBooks(),
-            'Books array does not match..'
-        );
+        $this->assertSame($sale->getBooks(), [123 => 1]);
     }
 
-    public function testAddMultipleBooks() {
+    public function testSpecifyAmountBooks() {
         $sale = new Sale();
-        $sale->addBook(123, 4);
-        $sale->addBook(456, 2);
-        $sale->addBook(456, 8);
+        $sale->addBook(123, 5);
 
-        $this->assertSame(
-            [123 => 4, 456 => 10],
-            $sale->getBooks(),
-            'Books are not as expected.'
-        );
+        $this->assertSame($sale->getBooks(), [123 => 5]);
+    }
+
+    public function testAddMultipleTimesSameBook() {
+        $sale = new Sale();
+        $sale->addBook(123, 5);
+        $sale->addBook(123);
+        $sale->addBook(123, 5);
+
+        $this->assertSame($sale->getBooks(), [123 => 11]);
+    }
+
+    public function testAddDifferentBooks() {
+        $sale = new Sale();
+        $sale->addBook(123, 5);
+        $sale->addBook(456, 2);
+        $sale->addBook(789, 5);
+
+        $this->assertSame($sale->getBooks(), [123 => 5, 456 => 2, 789 => 5]);
     }
 }
